@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layoutMiscellaneous"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foregroundGravity="bottom"
+    android:background="@color/colorMiscellaneousBackground"
+    android:orientation="vertical"
+    app:behavior_peekHeight="@dimen/_40sdp"
+    app:layout_behavior="@string/bottom_sheet_behavior">
+
+    <TextView
+        android:id="@+id/textMiscellaneous"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/miscellaneous"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/_13sdp" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+        <LinearLayout
+            android:id="@+id/layoutNoteColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10ssp"
+            android:orientation="horizontal">
+
+            <include layout="@layout/color_red_color_layout" />
+            <include layout="@layout/color_2_color_layout"/>
+            <include layout="@layout/color_3_color_layout"/>
+            <include layout="@layout/color_purple_color_layout"/>
+            <include layout="@layout/color_yellow_color_layout"/>
+            <include layout="@layout/color_6_color_layouy"/>
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+</LinearLayout>
