@@ -4,8 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
@@ -17,6 +21,7 @@ import com.example.mainnoteapp.NoteDetail.CreateNoteActivity;
 import com.example.mainnoteapp.NotesData.Note;
 import com.example.mainnoteapp.R;
 import com.example.mainnoteapp.adapters.NotesAdapter;
+import com.example.mainnoteapp.commonutils.Constants;
 import com.example.mainnoteapp.database.NotesDatabase;
 import com.example.mainnoteapp.listeners.NotesListener;
 
@@ -42,19 +47,43 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
         imageAddNoteMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(
-                        new Intent(getApplicationContext(), CreateNoteActivity.class),
-                        REQUEST_CODE_ADD_NOTE
-                );
+                startActivity(new Intent(MainActivity.this, CreateNoteActivity.class));
             }
         });
         notesRecyclerView = findViewById(R.id.notesRecylerView);
+
         notesRecyclerView.setLayoutManager(
                 new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
         );
         noteList = new ArrayList<>();
-        notesAdapter = new NotesAdapter(noteList, this);
+        notesAdapter = new NotesAdapter(noteList, this, this);
         notesRecyclerView.setAdapter(notesAdapter);
+
+        EditText inputSearch = findViewById(R.id.inputsearch);
+        inputSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                notesAdapter.cancelTimer();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (noteList.size() != 0){
+                    notesAdapter.searchNotes(s.toString());
+                }
+
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         getNotes();
     }
 
@@ -62,9 +91,9 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
     public void onNoteClicked(Note note, int position) {
         noteClickedPosition = position;
         Intent intent = new Intent(getApplicationContext(), CreateNoteActivity.class);
-        intent.putExtra("isViewOrUpdate", true);
+        intent.putExtra(Constants.INTENT_KEY_IS_NOTE_EDIT, true);
         intent.putExtra("note", note);
-        startActivityForResult(intent, REQUEST_CODE_UPDATE_NOTE);
+        startActivity(intent);
 
     }
 
@@ -83,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
             @Override
             protected void onPostExecute(List<Note> notes) {
                 super.onPostExecute(notes);
+                noteList.clear();
                 if (noteList.size()==0) {
                     noteList.addAll(notes);
                     notesAdapter.notifyDataSetChanged();
@@ -96,12 +126,4 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
         new GetNoteTask().execute();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_ADD_NOTE && requestCode == RESULT_OK){
-            getNotes();
-
-        }
-    }
 }

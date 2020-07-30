@@ -65,7 +65,9 @@ public class ColorViewManager implements View.OnClickListener {
     }
 
     private void didTapOnImageWithIndex(int indexSelected) {
-        Integer[] colorList = {R.color.colorNoteColor1, R.color.colorNoteColor2,R.color.colorNoteColor3, R.color.colorNoteColor4,R.color.colorNoteColor5, R.color.colorNoteColor6};
+        Integer[] colorList = {R.color.colorNoteColor1, R.color.colorNoteColor2,
+                R.color.colorNoteColor3, R.color.colorNoteColor4,
+                R.color.colorNoteColor5, R.color.colorNoteColor6};
 
         Integer colorSelected = colorList[indexSelected];
 

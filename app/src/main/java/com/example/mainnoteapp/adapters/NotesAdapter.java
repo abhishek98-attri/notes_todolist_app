@@ -1,6 +1,11 @@
 package com.example.mainnoteapp.adapters;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,21 +16,30 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mainnoteapp.NotesData.Note;
 import com.example.mainnoteapp.R;
 import com.example.mainnoteapp.commonutils.Constants;
+import com.example.mainnoteapp.database.NotesDatabase;
 import com.example.mainnoteapp.listeners.NotesListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> {
 
     private List<Note> notes;
     private NotesListener notesListener;
+    private Timer timer;
+    private List<Note> notesSource;
+    private Context mContext;
 
-    public NotesAdapter(List<Note> notes, NotesListener notesListener) {
+    public NotesAdapter(List<Note> notes, Context context, NotesListener notesListener) {
         this.notes = notes;
         this.notesListener = notesListener;
+        this.mContext = context;
+        notesSource = notes;
     }
 
     @NonNull
@@ -65,6 +79,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
         TextView textTitle, textSubTitle,textDateTime;
         LinearLayout layoutNote;
+
         View mainIndicatorNotesList;
 
         NoteViewHolder(@NonNull View itemView) {
@@ -72,12 +87,13 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             textTitle = itemView.findViewById(R.id.textTitle);
             textSubTitle = itemView.findViewById(R.id.textSubTitle);
             textDateTime = itemView.findViewById(R.id.textDateTime);
+            layoutNote = itemView.findViewById(R.id.layoutNote);
             mainIndicatorNotesList = itemView.findViewById(R.id.mainIndicatorNotesList);
 
         }
 
         void setNote(Note note){
-            textTitle.setText(note.title);
+            textTitle.setText(note.getTitle());
             if (note.subTitle.trim().isEmpty()) {
                 textSubTitle.setVisibility(View.GONE);
             } else {
@@ -94,6 +110,71 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
                 gradientDrawable.setColor(Color.parseColor(Constants.DEFAULT_INDICATOR_COLOR));
             }
         }
+    }
+//    public void searchNotes(final String searchkeyword) {
+//        timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                if (searchkeyword.trim().isEmpty()){
+//                    notes = notesSource;
+//                } else {
+//                    ArrayList<Note> temp = new ArrayList<>();
+//                    for (Note note : notesSource) {
+//                        if (note.getTitle().toLowerCase().contains(searchkeyword.toLowerCase())
+//                                || note.getSubTitle().toLowerCase().contains(searchkeyword.toLowerCase())
+//                                || note.getNoteText().toLowerCase().contains(searchkeyword.toLowerCase())){
+//                            temp.add(note);
+//                        }
+//                    }
+//                    notes = temp;
+//                }
+//                new Handler(Looper.getMainLooper()).post(new Runnable()  {
+//                    @Override
+//                            public void run() {
+//                        notifyDataSetChanged();
+//                    }
+//                });
+//
+//            }
+//        }, 300);
+//    }
+//    public void cancelTimer() {
+//        if (timer != null){
+//            timer.cancel();
+//        }
+//    }
+
+    public void searchNotes(final String searchkeyword) {
+        getNotesForSearch(searchkeyword);
+    }
+
+    private void getNotesForSearch(final String search){
+        @SuppressLint("StaticFieldLeak")
+        class GetNoteForSearchTask extends AsyncTask<Void, Void, List<Note>> {
+
+            @Override
+            protected List<Note> doInBackground(Void... voids) {
+                if (search.length() == 0) {
+                    return notesSource;
+                } else {
+                    String searchKey = "%" + search + "%";
+                    return NotesDatabase
+                            .getNotesDatabase(mContext)
+                            .noteDao().getAllNotesforSearch(searchKey);
+                }
+
+            }
+
+            @Override
+            protected void onPostExecute(List<Note> notesListNew) {
+                super.onPostExecute(notes);
+
+                notes = notesListNew;
+                notifyDataSetChanged();
+            }
+        }
+        new GetNoteForSearchTask().execute();
     }
 
 }

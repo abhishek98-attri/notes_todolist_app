@@ -15,10 +15,10 @@ import java.util.Locale;
 public class Note implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    private int id;
 
     @ColumnInfo(name = "title")
-    public String title;
+    private String title;
 
     @ColumnInfo(name = "date_time")
     private String dateTime;
@@ -27,7 +27,7 @@ public class Note implements Serializable {
     public String subTitle;
 
     @ColumnInfo(name = "note_text")
-    public String noteText;
+    private String noteText;
 
     @ColumnInfo(name = "image_path")
     public String imagePath;
@@ -40,6 +40,38 @@ public class Note implements Serializable {
 
     public String getDateTime() {
         return dateTime;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getNoteText() {
+        return noteText;
+    }
+
+    public void setNoteText(String noteText) {
+        this.noteText = noteText;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getSubTitle() {
+        return subTitle;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setSubTitle(String subTitle) {
+        this.subTitle = subTitle;
     }
 
     public void setDateTime(String dateTime) {

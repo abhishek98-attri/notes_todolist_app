@@ -3,18 +3,17 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_weight="1"
-    android:layout_marginLeft="@dimen/_10ssp"
-    >
-    
+    android:layout_marginLeft="@dimen/_10ssp">
+
     <View
-        android:id="@+id/viewColor4"
+        android:id="@+id/viewColor5"
         android:layout_width="@dimen/_35sdp"
         android:layout_height="@dimen/_35sdp"
-        android:background="@drawable/background_note_color_purple"/>
+        android:background="@drawable/background_blue_color"/>
 
 
     <ImageView
-        android:id="@+id/imageColor4"
+        android:id="@+id/imageColor5"
         android:layout_width="@dimen/_35sdp"
         android:layout_height="@dimen/_35sdp"
         android:contentDescription="@string/app_name"

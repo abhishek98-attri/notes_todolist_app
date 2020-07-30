@@ -13,7 +13,7 @@ import java.util.List;
 @Dao
 public interface NoteDao {
 
-    @Query("SELECT * FROM notes ORDER BY id DESC")
+    @Query("SELECT * FROM notes ORDER BY date_time DESC")
     List<Note> getAllNotes();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -21,4 +21,8 @@ public interface NoteDao {
 
     @Delete
     void deleteNote(Note note);
+
+
+    @Query("SELECT * FROM notes WHERE title LIKE :searchkey or sub_title LIKE :searchkey or note_text LIKE :searchkey ORDER BY date_time DESC")
+    List<Note> getAllNotesforSearch(String searchkey);
 }

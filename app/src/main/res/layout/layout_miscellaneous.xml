@@ -17,7 +17,7 @@
         android:fontFamily="sans-serif"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:text="@string/miscellaneous"
+        android:text="Color Highlight"
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/_13sdp" />
 
@@ -32,12 +32,15 @@
             android:layout_margin="@dimen/_10ssp"
             android:orientation="horizontal">
 
-            <include layout="@layout/color_red_color_layout" />
-            <include layout="@layout/color_2_color_layout"/>
-            <include layout="@layout/color_3_color_layout"/>
-            <include layout="@layout/color_purple_color_layout"/>
+            <include layout="@layout/color_green_color_layout" />
             <include layout="@layout/color_yellow_color_layout"/>
-            <include layout="@layout/color_6_color_layouy"/>
+            <include layout="@layout/color_red_color_layout"/>
+            <include layout="@layout/color_lightgreen_color_layout"/>
+            <include layout="@layout/color_blue_color_layout"/>
+            <include layout="@layout/color_purple_color_layouy"/>
+
+
+
 
         </LinearLayout>
     </HorizontalScrollView>
