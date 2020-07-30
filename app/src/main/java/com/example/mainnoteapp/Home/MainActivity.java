@@ -1,7 +1,10 @@
 package com.example.mainnoteapp.Home;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -9,11 +12,15 @@ import android.text.TextWatcher;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -26,6 +33,8 @@ import com.example.mainnoteapp.database.NotesDatabase;
 import com.example.mainnoteapp.listeners.NotesListener;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NotesListener {
@@ -58,6 +67,11 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
         noteList = new ArrayList<>();
         notesAdapter = new NotesAdapter(noteList, this, this);
         notesRecyclerView.setAdapter(notesAdapter);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(notesRecyclerView.getContext(), DividerItemDecoration.VERTICAL);
+//        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(MainActivity.this, R.layout.divider));
+        notesRecyclerView.addItemDecoration(dividerItemDecoration);
+
 
         EditText inputSearch = findViewById(R.id.inputsearch);
         inputSearch.addTextChangedListener(new TextWatcher() {
@@ -97,8 +111,50 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
 
     }
 
+    @Override
+    public void onNoteLongPressed(final Note note, int position) {
+        new AlertDialog.Builder(MainActivity.this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Are you sure?")
+                .setMessage("Do you want to delete this note?")
+                .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                            @Override
+
+                            public void onClick(DialogInterface dialog, int i) {
+                                deleteNoteFromdb(note);
+                            }
+                        }
+                )
+                .setNegativeButton("no", null)
+                .show();
+    }
+
+    private void deleteNoteFromdb(final Note note){
+
+        class GetNoteTask extends AsyncTask<Void, Void, List<Note>>{
+
+            @Override
+            protected List<Note> doInBackground(Void... voids) {
+                NotesDatabase database = NotesDatabase
+                        .getNotesDatabase(getApplicationContext());
+                database.noteDao().deleteNote(note);
+                return database.noteDao().getAllNotes();
+            }
+
+            @Override
+            protected void onPostExecute(List<Note> notes) {
+                super.onPostExecute(notes);
+                noteList.clear();
+                noteList.addAll(notes);
+                notesAdapter.notifyDataSetChanged();
+//                notesRecyclerView.smoothScrollToPosition(0);
+            }
+        }
+        new GetNoteTask().execute();
+    }
+
     private void getNotes(){
-        @SuppressLint("StaticFieldLeak")
+
         class GetNoteTask extends AsyncTask<Void, Void, List<Note>>{
 
             @Override
@@ -113,17 +169,15 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
             protected void onPostExecute(List<Note> notes) {
                 super.onPostExecute(notes);
                 noteList.clear();
-                if (noteList.size()==0) {
-                    noteList.addAll(notes);
-                    notesAdapter.notifyDataSetChanged();
-                } else {
-                    noteList.add(0, notes.get(0));
-                    notesAdapter.notifyItemChanged(0);
-                }
+                noteList.addAll(notes);
+                notesAdapter.notifyDataSetChanged();
+
                 notesRecyclerView.smoothScrollToPosition(0);
             }
         }
         new GetNoteTask().execute();
     }
+
+
 
 }

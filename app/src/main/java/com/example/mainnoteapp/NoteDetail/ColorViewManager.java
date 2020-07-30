@@ -7,7 +7,6 @@ import android.widget.LinearLayout;
 import com.example.mainnoteapp.R;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
-import java.lang.reflect.Array;
 
 public class ColorViewManager implements View.OnClickListener {
 

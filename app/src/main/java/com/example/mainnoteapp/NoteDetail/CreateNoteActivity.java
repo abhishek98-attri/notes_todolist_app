@@ -1,35 +1,25 @@
 package com.example.mainnoteapp.NoteDetail;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.method.MovementMethod;
 import android.text.util.Linkify;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mainnoteapp.NotesData.Note;
 import com.example.mainnoteapp.NotesData.SaveNoteTask;
 import com.example.mainnoteapp.R;
 import com.example.mainnoteapp.commonutils.Constants;
-import com.example.mainnoteapp.database.NotesDatabase;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -71,16 +61,8 @@ public class CreateNoteActivity extends AppCompatActivity implements SaveNoteTas
         viewSubtitleIndicator = findViewById(R.id.viewSubtitleIndicator);
 
         Date now = new Date();
-        String timeFormatted = new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", Locale.getDefault()).format(now);
-        textDateTime.setText(timeFormatted);
+        setTextDateLabel(now);
 
-        //ImageView imageSave = findViewById(R.id.imageSave);
-       // imageSave.setOnClickListener(new View.OnClickListener() {
-         //   @Override
-        //    public void onClick(View v) {
-           //     saveNote();
-        //    }
-     //   });
 
         selectNoteColor = Constants.DEFAULT_INDICATOR_COLOR;
 
@@ -94,6 +76,11 @@ public class CreateNoteActivity extends AppCompatActivity implements SaveNoteTas
         initMiscellaneous();
         setSubtitleIndicatorColor();
         setupEditText();
+    }
+
+    private void setTextDateLabel(Date date) {
+        String timeFormatted = new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", Locale.getDefault()).format(date);
+        textDateTime.setText(timeFormatted);
     }
 
     private void setupEditText() {
@@ -129,11 +116,8 @@ public class CreateNoteActivity extends AppCompatActivity implements SaveNoteTas
         inputNoteTitle.setText(alreadyAvailableNote.getTitle());
         inputNoteSubTitle.setText(alreadyAvailableNote.getSubTitle());
         inputNoteText.setText(alreadyAvailableNote.getNoteText());
-        textDateTime.setText(alreadyAvailableNote.getDateTime());
-
-        if (alreadyAvailableNote.imagePath != null && !alreadyAvailableNote.imagePath.trim().isEmpty()) {
-
-        }
+        setTextDateLabel(alreadyAvailableNote.getDate());
+        selectNoteColor = alreadyAvailableNote.color;
 
     }
 
@@ -141,6 +125,7 @@ public class CreateNoteActivity extends AppCompatActivity implements SaveNoteTas
         if (inputNoteTitle.getText().toString().trim().isEmpty()){
 
             saveNote();
+            return;
 
        //     Toast.makeText(this,"Note title can't be empty!", Toast.LENGTH_SHORT).show();
 
