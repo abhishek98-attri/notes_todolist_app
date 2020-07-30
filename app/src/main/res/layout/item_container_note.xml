@@ -15,16 +15,37 @@
         android:background="@drawable/background_note">
 
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textTitle"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:fontFamily="sans-serif-medium"
-            android:textColor="@color/colorWhite"
-            android:textSize="15dp"/>
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textTitle"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/colorWhite"
+                android:textSize="15dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/textDateTime"
+                android:includeFontPadding="false"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:fontFamily="cursive"
+                android:textColor="@color/colorNoteSubTittleText"
+                android:textSize="9dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginLeft="8dp" />
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -39,17 +60,16 @@
             android:textSize="12dp"/>
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/textDateTime"
-            android:includeFontPadding="false"
+            android:layout_height="wrap_content"
+            android:id="@+id/noteBodyText"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="4dp"
             android:layout_marginTop="4dp"
-            android:fontFamily="cursive"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:lines="1"
             android:textColor="@color/colorNoteSubTittleText"
-            android:textSize="9dp"/>
-
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="12dp"/>
 
 
     </LinearLayout>

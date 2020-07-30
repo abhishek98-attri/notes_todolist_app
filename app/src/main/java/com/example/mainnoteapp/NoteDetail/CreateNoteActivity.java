@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mainnoteapp.NotesData.Note;
@@ -43,7 +45,6 @@ public class CreateNoteActivity extends AppCompatActivity implements SaveNoteTas
     @Override
     public void onBackPressed() {
         saveNote();
-        super.onBackPressed();
     }
 
     private void setupSubviews() {
@@ -122,19 +123,14 @@ public class CreateNoteActivity extends AppCompatActivity implements SaveNoteTas
     }
 
    private void saveNote() {
-        if (inputNoteTitle.getText().toString().trim().isEmpty()){
+        if (inputNoteTitle.getText().toString().trim().isEmpty() &&
+            inputNoteSubTitle.getText().toString().trim().isEmpty() &&
+            inputNoteText.getText().toString().trim().isEmpty()) {
 
-            saveNote();
+            finish();
             return;
 
-       //     Toast.makeText(this,"Note title can't be empty!", Toast.LENGTH_SHORT).show();
-
-      }else if (inputNoteSubTitle.getText().toString().trim().isEmpty()
-                && inputNoteText.getText().toString().trim().isEmpty()){
-            saveNote();
-            return;
-    //    Toast.makeText(this,"Note can't be empty", Toast.LENGTH_SHORT).show();
-       }
+        }
 
         final Note note = new Note();
         note.setTitle( inputNoteTitle.getText().toString());

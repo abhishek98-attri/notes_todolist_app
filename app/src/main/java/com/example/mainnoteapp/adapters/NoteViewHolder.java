@@ -19,7 +19,7 @@ import java.util.Locale;
 
 public class NoteViewHolder extends RecyclerView.ViewHolder {
 
-    TextView textTitle, textSubTitle,textDateTime;
+    TextView textTitle, textSubTitle,textDateTime, noteBodyText;
     LinearLayout layoutNote;
 
     View mainIndicatorNotesList;
@@ -31,16 +31,28 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         textSubTitle = itemView.findViewById(R.id.textSubTitle);
         textDateTime = itemView.findViewById(R.id.textDateTime);
         layoutNote = itemView.findViewById(R.id.layoutNote);
+        noteBodyText = itemView.findViewById(R.id.noteBodyText);
         mainIndicatorNotesList = itemView.findViewById(R.id.mainIndicatorNotesList);
 
     }
 
     void setNote(Note note){
-        textTitle.setText(note.getTitle());
+        if (note.getTitle().trim().isEmpty()) {
+            textTitle.setText("No title");
+        } else {
+            textTitle.setText(note.getTitle().trim());
+        }
         if (note.subTitle.trim().isEmpty()) {
             textSubTitle.setVisibility(View.GONE);
         } else {
+            textSubTitle.setVisibility(View.VISIBLE);
             textSubTitle.setText(note.subTitle);
+        }
+        noteBodyText.setText(note.getNoteText().trim());
+        if (note.getNoteText().trim().length() == 0) {
+            noteBodyText.setVisibility(View.GONE);
+        } else {
+            noteBodyText.setVisibility(View.VISIBLE);
         }
         Date noteCreationDate = note.getDate();
         String timeFormatted = new SimpleDateFormat("EEEE, dd MMMM", Locale.getDefault()).format(noteCreationDate);
